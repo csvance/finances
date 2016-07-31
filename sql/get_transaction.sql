@@ -4,4 +4,4 @@ transaction_rule.category_id = transaction_category.id AND
 transaction_ruletag.transaction_rule_id = transaction_rule.id AND
 transaction_tag.id = transaction_ruletag.tag_id AND
 transaction_tag."primary"
-order by date asc
+order by date desc
