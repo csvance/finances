@@ -10,7 +10,7 @@ class LearnRules(object):
 
         index = 1
         for rule in rules:
-            print("%d: %s" % (index,rule))
+            print("%d: %s (%s)" % (index,rule,rule.category))
             index += 1
 
     def run(self):
@@ -21,6 +21,8 @@ class LearnRules(object):
 
         transactions = session.query(Transaction).filter(Transaction.rule_id == None).all()
         for transaction in transactions:
+
+            print(transaction)
 
             # Check for a match
             match = session.query(TransactionRuleMatch).filter(literal(transaction.desc).contains(TransactionRuleMatch.match)).first()
@@ -36,8 +38,13 @@ class LearnRules(object):
             # Assign a rule and create a match
             self._print_rules(rules)
 
-            print(transaction)
-            rule_index = int(input("rule> "))
+
+            rule_index = input("rule> ")
+
+            try:
+                rule_index = int(rule_index)
+            except:
+                continue
 
             if rule_index > 0:
                 transaction.rule_id = rules[rule_index-1].id

@@ -15,10 +15,10 @@ class ImportChase(object):
         session = self.session
         type_id = None
 
-        type = session.query(Type).filter(Type.name == dict['Type']).first()
+        type = session.query(TransactionType).filter(TransactionType.name == dict['Type']).first()
         if type is None:
 
-            type = Type(name=dict['Type'])
+            type = TransactionType(name=dict['Type'])
             session.add(type)
             session.commit()
             type_id = type.id

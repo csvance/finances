@@ -7,7 +7,7 @@ import hashlib
 Base = declarative_base()
 
 
-class Category(Base):
+class TransactionCategory(Base):
     __tablename__ = "transaction_category"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
@@ -16,7 +16,7 @@ class Category(Base):
         return self.name
 
 
-class Tag(Base):
+class TransactionTag(Base):
     __tablename__ = "transaction_tag"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, unique=True)
@@ -26,7 +26,7 @@ class Tag(Base):
         return self.name
 
 
-class Type(Base):
+class TransactionType(Base):
     __tablename__ = "transaction_type"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -44,9 +44,9 @@ class Transaction(Base):
     desc = Column(String, nullable=False)
     hash = Column(String, nullable=False)
     type_id = Column(Integer, ForeignKey('transaction_type.id'), nullable=False)
-    type = relationship('transaction_type')
+    type = relationship('TransactionType')
     rule_id = Column(Integer, ForeignKey('transaction_rule.id'))
-    rule = relationship('transaction_rule')
+    rule = relationship('TransactionRule')
 
     def __repr__(self):
         return "Date: %s Amount: %f Description: %s" % (self.date, self.amount, self.desc)
@@ -64,7 +64,7 @@ class TransactionRuleMatch(Base):
     id = Column(Integer, primary_key=True)
     match = Column(String, nullable=False)
     transaction_rule_id = Column(Integer, ForeignKey('transaction_rule.id'), nullable=False)
-    transaction_rule = relationship('transaction_rule')
+    transaction_rule = relationship('TransactionRule')
 
 
 class TransactionRule(Base):
@@ -73,7 +73,7 @@ class TransactionRule(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     category_id = Column(Integer, ForeignKey('transaction_category.id'), nullable=False)
-    category = relationship("transaction_category")
+    category = relationship("TransactionCategory")
 
     def __repr__(self):
         return self.name
@@ -84,9 +84,9 @@ class TransactionRuleTag(Base):
 
     id = Column(Integer, primary_key=True)
     transaction_rule_id = Column(Integer, ForeignKey('transaction_rule.id'), nullable=False)
-    transaction_rule = relationship('transaction_rule')
+    transaction_rule = relationship('TransactionRule')
     tag_id = Column(Integer, ForeignKey('transaction_tag.id'), nullable=False)
-    tag = relationship('transaction_tag')
+    tag = relationship('TransactionTag')
 
 
 engine = create_engine('sqlite:///finances.db')
@@ -107,17 +107,17 @@ if True:
 
     for category_name in rules:
 
-        category = session.query(Category).filter(Category.name == category_name).first()
+        category = session.query(TransactionCategory).filter(TransactionCategory.name == category_name).first()
         if category is None:
-            category = Category(name=category_name)
+            category = TransactionCategory(name=category_name)
             session.add(category)
             session.commit()
 
         for tag_name in rules[category_name]:
 
-            tag = session.query(Tag).filter(Tag.name == tag_name).first()
+            tag = session.query(TransactionTag).filter(TransactionTag.name == tag_name).first()
             if tag is None:
-                tag = Tag(name=tag_name, primary=True)
+                tag = TransactionTag(name=tag_name, primary=True)
                 session.add(tag)
 
             rule = session.query(TransactionRule).filter(TransactionRule.name == tag_name).first()
