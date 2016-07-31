@@ -99,11 +99,11 @@ Session = scoped_session(session_factory)
 if True:
     session = Session()
 
-    rules = {'Bills': ['ISP', 'Cell Phone', 'Internet Services','Car Insurance', 'Gas','Electricity', 'Rent', 'Medical Insurance'],
-             'School': ['School Supplies','Tuition'],
-             'Groceries': ['Food'],
-             'Expenses': ['Pet','Car Repair','Medical','Dental','Personal Care'],
-             'Extra': ['Eating Out','Entertainment','Hobby','Political','Charity','Travel']}
+    rules = {'Regular': ['ISP', 'Cell Phone', 'Internet Services', 'Car Insurance', 'Gas', 'Electricity', 'Rent',
+                         'Medical Insurance', 'School Supplies', 'Tuition', 'Groceries'],
+             'Irregular': ['Pet', 'Car Repair', 'Medical', 'Dental', 'Personal Care'],
+             'Extra': ['Eating Out', 'Entertainment', 'Hobby', 'Political', 'Charity', 'Travel'],
+             'Income': ['Job', 'Family', 'Services']}
 
     for category_name in rules:
 
@@ -117,18 +117,19 @@ if True:
 
             tag = session.query(Tag).filter(Tag.name == tag_name).first()
             if tag is None:
-                tag = Tag(name=tag_name,primary=True)
+                tag = Tag(name=tag_name, primary=True)
                 session.add(tag)
 
             rule = session.query(TransactionRule).filter(TransactionRule.name == tag_name).first()
             if rule is None:
-                rule = TransactionRule(name=tag_name,category_id=category.id)
+                rule = TransactionRule(name=tag_name, category_id=category.id)
                 session.add(rule)
 
             session.commit()
 
-            if session.query(TransactionRuleTag).filter(and_(TransactionRuleTag.tag_id == tag.id, TransactionRuleTag.transaction_rule_id == rule.id)).first() is None:
-                ruletag = TransactionRuleTag(tag_id=tag.id,transaction_rule_id=rule.id)
+            if session.query(TransactionRuleTag).filter(and_(TransactionRuleTag.tag_id == tag.id,
+                                                             TransactionRuleTag.transaction_rule_id == rule.id)).first() is None:
+                ruletag = TransactionRuleTag(tag_id=tag.id, transaction_rule_id=rule.id)
                 session.add(ruletag)
 
     session.commit()

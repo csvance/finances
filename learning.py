@@ -25,8 +25,13 @@ class LearnRules(object):
             # Check for a match
             match = session.query(TransactionRuleMatch).filter(literal(transaction.desc).contains(TransactionRuleMatch.match)).first()
             if match is not None:
-                transaction.rule_id = match.transaction_rule_id
-                continue
+
+                m = input("rule %s> " % match.transaction_rule.name)
+
+                if m == "":
+                    transaction.rule_id = match.transaction_rule_id
+                    continue
+
 
             # Assign a rule and create a match
             self._print_rules(rules)
@@ -39,7 +44,7 @@ class LearnRules(object):
             else:
                 continue
 
-            m = input("match> ")
+            m = input("create rule> ")
 
             if m != "":
                 match = TransactionRuleMatch(match=m,transaction_rule_id=transaction.rule_id)
