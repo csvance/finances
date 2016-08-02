@@ -1,14 +1,14 @@
 import csv
 from dateutil.parser import parse as date_parse
-
 from schema import *
 
 
 class ImportChase(object):
 
-    def __init__(self, path):
+    def __init__(self, path, starting_date):
         self.path = path
         self.session = Session()
+        self.starting_date = starting_date
 
     def handle_row(self, dict):
 
@@ -25,11 +25,15 @@ class ImportChase(object):
         else:
             type_id = type.id
 
+        day = date_parse(dict['Posting Date'])
+        if day < self.starting_date:
+            return
+
         transaction = Transaction()
         transaction.desc = dict['Description']
         transaction.amount = dict['Amount']
         transaction.balance = dict['Balance']
-        transaction.date = date_parse(dict['Posting Date'])
+        transaction.date = day
         transaction.type_id = type_id
         transaction.generate_hash()
 
