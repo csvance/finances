@@ -40,7 +40,7 @@ class Transaction(Base):
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False)
     amount = Column(Float, nullable=False)
-    balance = Column(Float, nullable=False)
+    balance = Column(Float)
     desc = Column(String, nullable=False)
     hash = Column(String, nullable=False)
     type_id = Column(Integer, ForeignKey('transaction_type.id'), nullable=False)

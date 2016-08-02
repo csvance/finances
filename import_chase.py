@@ -26,13 +26,20 @@ class ImportChase(object):
             type_id = type.id
 
         day = date_parse(dict['Posting Date'])
-        if day < self.starting_date:
-            return
+        if day.date() < self.starting_date:
+            return False
 
         transaction = Transaction()
         transaction.desc = dict['Description']
-        transaction.amount = dict['Amount']
-        transaction.balance = dict['Balance']
+        transaction.amount = float(dict['Amount'])
+
+        try:
+            float(dict['Balance'])
+            transaction.balance = dict['Balance']
+        except:
+            # Empty balance means transaction will still update
+            return
+
         transaction.date = day
         transaction.type_id = type_id
         transaction.generate_hash()
@@ -41,13 +48,16 @@ class ImportChase(object):
             session.add(transaction)
         else:
             # Data is sorted in descending order, so stop at first known transaction match
-            return
+            return False
+
+        return True
 
     def run(self):
 
         # Read csv file into dictionary
         reader = csv.DictReader(open(self.path,'r'))
         for row in reader:
-            self.handle_row(row)
+            if not self.handle_row(row):
+                break
 
         self.session.commit()
