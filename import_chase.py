@@ -38,7 +38,8 @@ class ImportChase(object):
             transaction.balance = dict['Balance']
         except:
             # Empty balance means transaction will still update
-            return
+            # Return True so we don't skip any completed transactions before it
+            return True
 
         transaction.date = day
         transaction.type_id = type_id
