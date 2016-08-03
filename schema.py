@@ -66,6 +66,9 @@ class TransactionRuleMatch(Base):
     transaction_rule_id = Column(Integer, ForeignKey('transaction_rule.id'), nullable=False)
     transaction_rule = relationship('TransactionRule')
 
+    def __repr__(self):
+        return self.match
+
 
 class TransactionRule(Base):
     __tablename__ = "transaction_rule"

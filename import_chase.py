@@ -4,7 +4,6 @@ from schema import *
 
 
 class ImportChase(object):
-
     def __init__(self, path, starting_date):
         self.path = path
         self.session = Session()
@@ -56,7 +55,7 @@ class ImportChase(object):
     def run(self):
 
         # Read csv file into dictionary
-        reader = csv.DictReader(open(self.path,'r'))
+        reader = csv.DictReader(open(self.path, 'r'))
         for row in reader:
             if not self.handle_row(row):
                 break
