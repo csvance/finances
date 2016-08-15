@@ -106,7 +106,8 @@ if True:
                          'Medical Insurance', 'School Supplies', 'Tuition', 'Groceries'],
              'Irregular': ['Pet', 'Car Repair', 'Medical', 'Dental', 'Personal Care'],
              'Extra': ['Eating Out', 'Entertainment', 'Hobby', 'Political', 'Charity', 'Travel'],
-             'Income': ['Job', 'Family', 'Services']}
+             'Income': ['Job', 'Family', 'Services'],
+             'Ignore': ['Ignore']}
 
     for category_name in rules:
 
