@@ -92,5 +92,5 @@ ENV/
 
 
 *.idea
-chase.csv
+import/
 finances.db

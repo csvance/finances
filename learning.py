@@ -6,10 +6,10 @@ class LearnRules(object):
     def __init__(self):
         self.session = Session()
 
-    def _print_rules(self, rules):
+    def _print_rules(self):
 
         index = 1
-        for rule in rules:
+        for rule in self.rules:
             print("%d: %s (%s)" % (index, rule, rule.category))
             index += 1
 
@@ -27,7 +27,7 @@ class LearnRules(object):
                 return
 
         # Assign a rule and create a match
-        self._print_rules(rules)
+        self._print_rules()
 
         rule_index = input("rule> ")
 
@@ -37,7 +37,7 @@ class LearnRules(object):
             return
 
         if rule_index > 0:
-            transaction.rule_id = rules[rule_index - 1].id
+            transaction.rule_id = self.rules[rule_index - 1].id
         else:
             return
 
@@ -53,7 +53,7 @@ class LearnRules(object):
 
         session = self.session
 
-        rules = session.query(TransactionRule).order_by(TransactionRule.name).all()
+        self.rules = session.query(TransactionRule).order_by(TransactionRule.name).all()
 
         transactions = session.query(Transaction).filter(Transaction.rule_id == None).all()
         for transaction in transactions:

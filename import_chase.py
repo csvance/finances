@@ -1,6 +1,7 @@
 import csv
 from dateutil.parser import parse as date_parse
 from schema import *
+import os
 
 
 class ImportChase(object):
@@ -55,9 +56,14 @@ class ImportChase(object):
     def run(self):
 
         # Read csv file into dictionary
-        reader = csv.DictReader(open(self.path, 'r'))
-        for row in reader:
-            if not self.handle_row(row):
-                break
+        for file in os.listdir(self.path):
+            if file.upper().find(".CSV") == -1:
+                continue
+            fpath = self.path + "/" + file
+            print("Importing %s..." % fpath)
+            reader = csv.DictReader(open(fpath, 'r'))
+            for row in reader:
+                if not self.handle_row(row):
+                    break
 
         self.session.commit()
